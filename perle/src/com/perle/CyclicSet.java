@@ -5,17 +5,28 @@ import java.util.Arrays;
 
 public class CyclicSet {
 
-	private int[] pcycle;
-	private int[] icycle;
+	private IntervalCycle pIntervalCycle;
+	private IntervalCycle iIntervalCycle;
+	private int[] pCycle;
+	private int[] iCycle;
 	private int[] cyclicSet;
 	
-	public CyclicSet(int[] pcycle, int[] icycle) {
-		this.pcycle = pcycle;
-		this.icycle = icycle;
-		cyclicSet = new int[pcycle.length * 2];
+	public CyclicSet(IntervalCycle pcycle, int indexPCycle) {
+		if(pcycle.getIntervalCycle().length < indexPCycle){
+			throw new IllegalArgumentException("cycle out of bound");
+		}
+		this.pIntervalCycle = pcycle;
+		this.iIntervalCycle = pcycle.getInversePCycle();
+		this.pCycle = pcycle.getIntervalCycle();
+		this.iCycle = iIntervalCycle.getIntervalCycle();
+		if (indexPCycle != 0) {
+			this.pCycle = Util.rotateArray(pcycle.getIntervalCycle(), indexPCycle);
+		}
+		
+		cyclicSet = new int[pcycle.getIntervalCycle().length * 2];
 		for (int i = 0, j = 0; i < cyclicSet.length; i=i+2, j++) {
-			cyclicSet[i] = pcycle[j];
-			cyclicSet[i + 1] = icycle[j];
+			cyclicSet[i] = pCycle[j];
+			cyclicSet[i + 1] = iCycle[j];
 		}
 	}
 	
@@ -39,7 +50,7 @@ public class CyclicSet {
 	}
 	
 	public String getName(){
-		return getPTonicSumName(getLeftTonicSum()) + getITonicSumName(getRightTonicSum());
+		return getPTonicSumName(getLeftTonicSum() % 12) + getITonicSumName(getRightTonicSum() % 12);
 	}
 
 	private String getPTonicSumName(int tonicSum) {
@@ -62,18 +73,74 @@ public class CyclicSet {
 		return name;
 	}
 	
+	public int getCyclicInterval(){
+		return pIntervalCycle.getInterval();
+	}
+	
+	public void transpose(int step){//update pcycle, icycle???
+		for (int i = 0; i < cyclicSet.length; i++) {
+			cyclicSet[i] = cyclicSet[i] + step;
+		}
+	}
+	
+	/**
+	 * Semi-transposition
+	 * @param step: step 0 will semi-transpose
+	 */
+	public void semiTranspose(int step){//update pcycle, icycle???
+		for (int i = 0; i < cyclicSet.length; i = i + 2) {
+			cyclicSet[i] = cyclicSet[i] + step;
+			cyclicSet[i + 1] = cyclicSet[i + 1] + step + 1;
+		}
+	}
+	
+	public void inverse(int step){//update pcycle, icycle???
+		for (int i = 0; i < cyclicSet.length; i++) {
+			cyclicSet[i] = (12 - cyclicSet[i] + step) % 12;
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(cyclicSet);
+	}
+	
 	public static void main(String[] args) {
-		CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC5, IntervalCycle.I_IC5);
-		System.out.println(Arrays.toString(cyclicSet.getCyclicSet()));
-		System.out.println(cyclicSet.getName()); 
+		for (int i = 0; i < 12; i++) {
+			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC1, i);
+			System.out.print(cyclicSet.getName());
+			System.out.println(cyclicSet);
+		}
+		System.out.println();
+//		for (int i = 0; i < 12; i++) {
+//			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC1, 0, IntervalCycle.I_IC1, i);
+//			System.out.print(cyclicSet.getName());
+//			System.out.println(cyclicSet);
+//		}
+//		System.out.println();
 		
-		cyclicSet = new CyclicSet(IntervalCycle.P_IC1, IntervalCycle.I_IC1);
-		System.out.println(Arrays.toString(cyclicSet.getCyclicSet()));
-		System.out.println(cyclicSet.getName()); 
+		for (int i = 0; i < 6; i++) {
+			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC2_0, i);
+			System.out.print(cyclicSet.getName());
+			System.out.println(cyclicSet);
+			cyclicSet = new CyclicSet(IntervalCycle.P_IC2_1, i);
+			System.out.print(cyclicSet.getName());
+			System.out.println(cyclicSet);
+		}
+		System.out.println();
+		for (int i = 0; i < 4; i++) {
+			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC3_0, i);
+			System.out.print(cyclicSet.getName());
+			System.out.println(cyclicSet);
+		}
+		System.out.println();
+//		cyclicSet.inverse(1);
+//		System.out.println(Arrays.toString(cyclicSet.getCyclicSet()));
+//		System.out.println(cyclicSet.getName());
 		
-		cyclicSet = new CyclicSet(IntervalCycle.P_IC2, IntervalCycle.I_IC2);
-		System.out.println(Arrays.toString(cyclicSet.getCyclicSet()));
-		System.out.println(cyclicSet.getName()); 
+//		CyclicSet cyclicSet2 = new CyclicSet(IntervalCycle.P_IC5, 0, IntervalCycle.I_IC5, 0);
+//		System.out.println(Arrays.toString(cyclicSet2.getCyclicSet()));
+//		System.out.println(cyclicSet2.getName());
 		
 	}
 }

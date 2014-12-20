@@ -1,6 +1,7 @@
 package com.perle;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 
 
 public class CyclicSet {
@@ -106,41 +107,15 @@ public class CyclicSet {
 	}
 	
 	public static void main(String[] args) {
-		for (int i = 0; i < 12; i++) {
-			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC1, i);
-			System.out.print(cyclicSet.getName());
-			System.out.println(cyclicSet);
+		EnumSet<IntervalCycle> set = EnumSet.range(IntervalCycle.P_IC1, IntervalCycle.P_IC7);
+		for (IntervalCycle intervalCycle : set) {
+			for (int i = 0; i < intervalCycle.getIntervalCycle().length; i++) {
+				CyclicSet cyclicSet = new CyclicSet(intervalCycle, i);
+				System.out.print(cyclicSet.getName());
+				System.out.println(cyclicSet);
+			}
+			System.out.println();
 		}
-		System.out.println();
-//		for (int i = 0; i < 12; i++) {
-//			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC1, 0, IntervalCycle.I_IC1, i);
-//			System.out.print(cyclicSet.getName());
-//			System.out.println(cyclicSet);
-//		}
-//		System.out.println();
-		
-		for (int i = 0; i < 6; i++) {
-			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC2_0, i);
-			System.out.print(cyclicSet.getName());
-			System.out.println(cyclicSet);
-			cyclicSet = new CyclicSet(IntervalCycle.P_IC2_1, i);
-			System.out.print(cyclicSet.getName());
-			System.out.println(cyclicSet);
-		}
-		System.out.println();
-		for (int i = 0; i < 4; i++) {
-			CyclicSet cyclicSet = new CyclicSet(IntervalCycle.P_IC3_0, i);
-			System.out.print(cyclicSet.getName());
-			System.out.println(cyclicSet);
-		}
-		System.out.println();
-//		cyclicSet.inverse(1);
-//		System.out.println(Arrays.toString(cyclicSet.getCyclicSet()));
-//		System.out.println(cyclicSet.getName());
-		
-//		CyclicSet cyclicSet2 = new CyclicSet(IntervalCycle.P_IC5, 0, IntervalCycle.I_IC5, 0);
-//		System.out.println(Arrays.toString(cyclicSet2.getCyclicSet()));
-//		System.out.println(cyclicSet2.getName());
 		
 	}
 }

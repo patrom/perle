@@ -252,6 +252,30 @@ public class AxisDyadArray {
 		}
 	}
 	
+	public boolean isCognateSet(){
+		if (isDifferenceAlignment()) {
+			int[] differences = getDifferences();
+			return (differences[0] == differences[1]) && (differences[1] == differences[2]);
+		}else{
+			int[] sums = getSums();
+			return (sums[0] == sums[1]) && (sums[1] == sums[2]);
+		}
+	}
+	
+	public void transpose(int step){
+		topCyclicSet.transpose(step);
+		topCycle = topCyclicSet.getCyclicSet();
+		bottomCyclicSet.transpose(step);
+		bottomCycle = bottomCyclicSet.getCyclicSet();
+	}
+	
+	public void semiTranspose(int step){
+		topCyclicSet.semiTranspose(step);
+		topCycle = topCyclicSet.getCyclicSet();
+		bottomCyclicSet.semiTranspose(step);
+		bottomCycle = bottomCyclicSet.getCyclicSet();
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -266,17 +290,20 @@ public class AxisDyadArray {
 		}
 		builder.append("SM: " + getSynopticMode() + ", ");
 		builder.append("SK: " + getSynopticKey() + ", ");
-		builder.append("Tonality: " + getTonality());
+		builder.append("Tonality: " + getTonality() + ", " );
+		builder.append("Cognate: " + isCognateSet());
 		builder.append(System.getProperty("line.separator"));
 		return builder.toString();
 	}
 	
 	public static void main(String[] args) {
-		for (int j = 0; j < 12; j++) {
-			AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC1, 0), 0,
-					new CyclicSet(IntervalCycle.P_IC1, 0), j);
-			System.out.print(axisDyadArray);
-			System.out.println(axisDyadArray.printArray());
+		for (int i = 0; i < 12; i++) {
+			for (int j = 0; j < 24; j++) {
+				AxisDyadArray axisDyadArray = new AxisDyadArray(new CyclicSet(IntervalCycle.P_IC7, 0), 0,
+						new CyclicSet(IntervalCycle.P_IC7, i), j);
+				System.out.print(axisDyadArray);
+				System.out.println(axisDyadArray.printArray());
+			}
 		}
 		
 //		EnumSet<IntervalCycle> set = EnumSet.range(IntervalCycle.P_IC1, IntervalCycle.P_IC7);
